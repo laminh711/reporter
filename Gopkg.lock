@@ -26,11 +26,19 @@
   revision = "ff6b7dc882cf4cfba7ee0b9f7dcc1ac096c554aa"
 
 [[projects]]
+  digest = "1:86c75d55fde56a814f69515d092963634d6f5f6bc1c3e9091b01fbe373a9546e"
+  name = "github.com/k0kubun/pp"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "3d73dea227e0711e38b911ffa6fbafc8ff6b2991"
+  version = "v3.0.1"
+
+[[projects]]
   digest = "1:efd601ad1d1189884f37ed075fadb5bbd17f1f5acf5862827247c6da56d125ba"
   name = "github.com/labstack/echo"
   packages = [
     ".",
-    "middleware",
+    "middleware"
   ]
   pruneopts = "UT"
   revision = "38772c686c76b501f94bd6cd5b77f5842e93b559"
@@ -43,7 +51,7 @@
     "bytes",
     "color",
     "log",
-    "random",
+    "random"
   ]
   pruneopts = "UT"
   revision = "4919956f6fb227b548f004da27c7c6b20fba499f"
@@ -128,7 +136,7 @@
     "x/mongo/driver/session",
     "x/mongo/driver/topology",
     "x/mongo/driver/uuid",
-    "x/mongo/driver/wiremessage",
+    "x/mongo/driver/wiremessage"
   ]
   pruneopts = "UT"
   revision = "c520d023af0a89aec8b7f97717b52da270df2c38"
@@ -141,7 +149,7 @@
   packages = [
     "acme",
     "acme/autocert",
-    "pbkdf2",
+    "pbkdf2"
   ]
   pruneopts = "UT"
   revision = "9756ffdc24725223350eb3266ffb92590d28f278"
@@ -189,7 +197,7 @@
     "unicode/bidi",
     "unicode/cldr",
     "unicode/norm",
-    "unicode/rangetable",
+    "unicode/rangetable"
   ]
   pruneopts = "UT"
   revision = "342b2e1fbaa52c93f31447ad2c6abc048c63e475"
@@ -199,11 +207,12 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/k0kubun/pp",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",
     "go.mongodb.org/mongo-driver/bson",
     "go.mongodb.org/mongo-driver/mongo",
-    "go.mongodb.org/mongo-driver/mongo/options",
+    "go.mongodb.org/mongo-driver/mongo/options"
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

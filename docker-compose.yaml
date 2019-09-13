@@ -21,3 +21,11 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: who
       ME_CONFIG_MONGODB_ADMINPASSWORD: dat
+
+  # NOTHING WORKS FOR NOW 
+  # mongo-seed:
+  #   depends_on:
+  #     - mongo
+  #   build: ./mongo-seed
+  #   links:
+  #     - mongo

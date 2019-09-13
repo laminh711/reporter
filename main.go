@@ -17,8 +17,9 @@ import (
 
 // Log Log
 type Log struct {
-	Name    string    `json:"name"`
-	StartAt time.Time `json:"start_at"`
+	Name       string    `json:"name"`
+	Productive bool      `json:"productive"`
+	StartAt    time.Time `json:"start_at"`
 }
 
 // type RequestBody struct {
@@ -41,6 +42,13 @@ func main() {
 	// middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	// CORS restricted
+	// Allows requests from any `https://labstack.com` or `https://labstack.net` origin
+	// wth GET, PUT, POST or DELETE method.
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
 
 	// routes
 	api := e.Group("api")
@@ -60,9 +68,26 @@ func seedData(collection *mongo.Collection) {
 	pp.Println("deleted ", deleteManyRs.DeletedCount, " records")
 
 	initData := []interface{}{}
-	first := Log{Name: "set mongo connection", StartAt: time.Now().Add(time.Duration(-1) * time.Hour)}
+	first := Log{
+		Name:       "set mongo connection",
+		Productive: true,
+		StartAt:    time.Now().Add(time.Duration(-1) * time.Hour),
+	}
+	second := Log{
+		Name:       "seed data",
+		Productive: true,
+		StartAt:    time.Now().Add(time.Duration(+1) * time.Hour),
+	}
+
+	third := Log{
+		Name:       "test sort",
+		Productive: false,
+		StartAt:    time.Now().Add(time.Duration(0) * time.Hour),
+	}
 
 	initData = append(initData, first)
+	initData = append(initData, second)
+	initData = append(initData, third)
 
 	insertManyRs, err := collection.InsertMany(context.Background(), initData)
 	if err != nil {
@@ -75,10 +100,9 @@ func showlog(c echo.Context) error {
 	collection := db.Collection("logs")
 
 	filter := bson.M{}
-	// findOptions := &options.FindOptions{
-	// 	Sort:
-	// }
-	cursor, err := collection.Find(context.Background(), filter)
+	findOptions := options.Find()
+	findOptions.SetSort(bson.D{{"startat", -1}})
+	cursor, err := collection.Find(context.Background(), filter, findOptions)
 	if err != nil {
 		return err
 	}

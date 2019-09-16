@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/jasonlvhit/gocron"
 	"github.com/k0kubun/pp"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -17,9 +20,17 @@ import (
 
 // Log Log
 type Log struct {
-	Name       string    `json:"name"`
-	Productive bool      `json:"productive"`
-	StartAt    time.Time `json:"start_at"`
+	ID         *primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Name       string              `json:"name"`
+	Productive bool                `json:"productive"`
+	StartAt    time.Time           `json:"start_at"`
+}
+
+// Worktime interval info
+type Worktime struct {
+	ID       *primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	LeftEnd  time.Time           `json:"left_end" bson:"left_end"`
+	RightEnd time.Time           `json:"right_end" bson:"right_end"`
 }
 
 // type RequestBody struct {
@@ -55,45 +66,110 @@ func main() {
 	api.GET("/logs", showlog)
 	api.POST("/logs", writelog)
 
+	api.GET("/worktimes", getWorktimes)
 	// start server
 	e.Logger.Fatal(e.Start(":8754"))
+
+	gocron.Every(5).Seconds().Do(addLog, db.Collection("logs"))
+	// function Start start all the pending jobs
+	<-gocron.Start()
 }
 
-func seedData(collection *mongo.Collection) {
-	all := bson.M{}
-	deleteManyRs, err := collection.DeleteMany(context.Background(), all)
-	if err != nil {
-		log.Fatal("Can not remove logs")
+func addLog(collection *mongo.Collection) {
+	newOne := Log{
+		Name:    "",
+		StartAt: time.Now(),
 	}
-	pp.Println("deleted ", deleteManyRs.DeletedCount, " records")
+	irs, err := collection.InsertOne(context.Background(), newOne)
+	if err != nil {
+		log.Fatalf("job add log failed by error %v", err)
+	}
+	log.Printf("add log success with record %v", irs.InsertedID)
+}
+
+func bod(t time.Time) time.Time {
+	year, month, day := t.Date()
+	return time.Date(year, month, day, 0, 0, 0, 0, t.Location())
+}
+
+func seedData(db *mongo.Database) {
+
+	logCollection := db.Collection("logs")
+	worktimeCollection := db.Collection("worktimes")
+
+	err := db.Drop(context.Background())
+	if err != nil {
+		log.Fatalf("drop db failed by error %v", err)
+	}
 
 	initData := []interface{}{}
 	first := Log{
 		Name:       "set mongo connection",
 		Productive: true,
-		StartAt:    time.Now().Add(time.Duration(-1) * time.Hour),
+		StartAt:    time.Now().UTC().Add(time.Duration(-1) * time.Hour),
 	}
 	second := Log{
 		Name:       "seed data",
 		Productive: true,
-		StartAt:    time.Now().Add(time.Duration(+1) * time.Hour),
+		StartAt:    time.Now().UTC().Add(time.Duration(+1) * time.Hour),
 	}
 
 	third := Log{
 		Name:       "test sort",
 		Productive: false,
-		StartAt:    time.Now().Add(time.Duration(0) * time.Hour),
+		StartAt:    time.Now().UTC().Add(time.Duration(0) * time.Hour),
 	}
 
 	initData = append(initData, first)
 	initData = append(initData, second)
 	initData = append(initData, third)
 
-	insertManyRs, err := collection.InsertMany(context.Background(), initData)
+	insertManyRs, err := logCollection.InsertMany(context.Background(), initData)
 	if err != nil {
-		log.Fatal("Seed failed")
+		log.Fatalf("Seed logs failed by error %v", err)
 	}
+
 	pp.Println("inserted these: \n", insertManyRs.InsertedIDs)
+
+	worktime := Worktime{
+		LeftEnd:  bod(time.Now().UTC()).Add(time.Hour * time.Duration(8)),
+		RightEnd: bod(time.Now().UTC()).Add(time.Hour * time.Duration(17)),
+	}
+
+	ion, err := worktimeCollection.InsertOne(context.Background(), worktime)
+	if err != nil {
+		log.Fatalf("Seed worktime failed by error %v", err)
+	}
+	pp.Println("inserted %v", ion.InsertedID)
+
+}
+
+func getWorktimes(c echo.Context) error {
+	collection := db.Collection("worktimes")
+
+	filter := bson.M{}
+	findOptions := options.Find()
+	findOptions.SetSort(bson.D{{"left_end", 1}})
+	cursor, err := collection.Find(context.Background(), filter, findOptions)
+	if err != nil {
+		return err
+	}
+
+	result := []Worktime{}
+	var worktimeRecord Worktime
+	for cursor.Next(context.Background()) {
+		err := cursor.Decode(&worktimeRecord)
+		if err != nil {
+			return err
+		}
+
+		result = append(result, worktimeRecord)
+	}
+
+	response := make(map[string]interface{})
+	response["data"] = result
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func showlog(c echo.Context) error {
@@ -170,7 +246,7 @@ func getMongoConnection() (*mongo.Database, error) {
 	pp.Println("mongo: connected to mongdb %s", HOSTS)
 
 	// seed data
-	seedData(connection.Collection("logs"))
+	seedData(connection)
 	// seed data
 	return connection, nil
 }

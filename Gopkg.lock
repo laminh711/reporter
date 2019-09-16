@@ -26,6 +26,14 @@
   revision = "ff6b7dc882cf4cfba7ee0b9f7dcc1ac096c554aa"
 
 [[projects]]
+  branch = "master"
+  digest = "1:6c50203decf37072534fe5199a59e5c4ff52eeb80e1da5816339de5b95c807d6"
+  name = "github.com/jasonlvhit/gocron"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "7ef3bafdc25c3ba768c70cf058acc83bb1535ab2"
+
+[[projects]]
   digest = "1:86c75d55fde56a814f69515d092963634d6f5f6bc1c3e9091b01fbe373a9546e"
   name = "github.com/k0kubun/pp"
   packages = ["."]
@@ -207,6 +215,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/jasonlvhit/gocron",
     "github.com/k0kubun/pp",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",

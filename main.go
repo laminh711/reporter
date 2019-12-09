@@ -2,36 +2,41 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/jasonlvhit/gocron"
 	"github.com/k0kubun/pp"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 
+	"github.com/laminh711/reporter/models"
+	_wh "github.com/laminh711/reporter/worktime/delivery/http"
+	_wr "github.com/laminh711/reporter/worktime/repository"
+	_wu "github.com/laminh711/reporter/worktime/usecase"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // Log Log
-type Log struct {
-	ID         *primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	Name       string              `json:"name"`
-	Productive bool                `json:"productive"`
-	StartAt    time.Time           `json:"start_at"`
-}
+// type Log struct {
+// 	ID         *primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+// 	Name       string              `json:"name"`
+// 	Productive bool                `json:"productive"`
+// 	StartAt    time.Time           `json:"start_at"`
+// }
 
 // Worktime interval info
-type Worktime struct {
-	ID       *primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	LeftEnd  time.Time           `json:"left_end" bson:"left_end"`
-	RightEnd time.Time           `json:"right_end" bson:"right_end"`
-}
+// type Worktime struct {
+// 	ID       *primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+// 	LeftEnd  time.Time           `json:"left_end" bson:"left_end"`
+// 	RightEnd time.Time           `json:"right_end" bson:"right_end"`
+// }
 
 // type RequestBody struct {
 // 	Name    string `json:"name"`
@@ -63,10 +68,23 @@ func main() {
 
 	// routes
 	api := e.Group("api")
-	api.GET("/logs", showlog)
-	api.POST("/logs", writelog)
+	// api.GET("/logs", showlog)
+	// api.POST("/logs", writelog)
 
 	api.GET("/worktimes", getWorktimes)
+
+	worktimeRepository := _wr.NewMongoWorktimeRepository(db, "worktimes")
+	worktimeUsecase := _wu.NewWorktimeUsecase(worktimeRepository, 30)
+	_wh.NewWorktimeHandler(e, worktimeUsecase)
+
+	// test code
+	data, err := json.MarshalIndent(e.Routes(), "", "  ")
+	if err != nil {
+		fmt.Println("whatever")
+	}
+	ioutil.WriteFile("routes.json", data, 0644)
+	// test code
+
 	// start server
 	e.Logger.Fatal(e.Start(":8754"))
 
@@ -76,7 +94,7 @@ func main() {
 }
 
 func addLog(collection *mongo.Collection) {
-	newOne := Log{
+	newOne := models.Log{
 		Name:    "",
 		StartAt: time.Now(),
 	}
@@ -103,18 +121,18 @@ func seedData(db *mongo.Database) {
 	}
 
 	initData := []interface{}{}
-	first := Log{
+	first := models.Log{
 		Name:       "set mongo connection",
 		Productive: true,
 		StartAt:    time.Now().UTC().Add(time.Duration(-1) * time.Hour),
 	}
-	second := Log{
+	second := models.Log{
 		Name:       "seed data",
 		Productive: true,
 		StartAt:    time.Now().UTC().Add(time.Duration(+1) * time.Hour),
 	}
 
-	third := Log{
+	third := models.Log{
 		Name:       "test sort",
 		Productive: false,
 		StartAt:    time.Now().UTC().Add(time.Duration(0) * time.Hour),
@@ -131,7 +149,7 @@ func seedData(db *mongo.Database) {
 
 	pp.Println("inserted these: \n", insertManyRs.InsertedIDs)
 
-	worktime := Worktime{
+	worktime := models.Worktime{
 		LeftEnd:  bod(time.Now().UTC()).Add(time.Hour * time.Duration(8)),
 		RightEnd: bod(time.Now().UTC()).Add(time.Hour * time.Duration(17)),
 	}
@@ -155,14 +173,13 @@ func getWorktimes(c echo.Context) error {
 		return err
 	}
 
-	result := []Worktime{}
-	var worktimeRecord Worktime
+	result := []models.Worktime{}
+	var worktimeRecord models.Worktime
 	for cursor.Next(context.Background()) {
 		err := cursor.Decode(&worktimeRecord)
 		if err != nil {
 			return err
 		}
-
 		result = append(result, worktimeRecord)
 	}
 
@@ -183,8 +200,8 @@ func showlog(c echo.Context) error {
 		return err
 	}
 
-	result := []Log{}
-	var logRecord Log
+	result := []models.Log{}
+	var logRecord models.Log
 	for cursor.Next(context.Background()) {
 		err := cursor.Decode(&logRecord)
 		if err != nil {
@@ -201,7 +218,7 @@ func showlog(c echo.Context) error {
 }
 
 func writelog(c echo.Context) error {
-	rec := new(Log)
+	rec := new(models.Log)
 	if err := c.Bind(rec); err != nil {
 		return err
 	}
@@ -246,7 +263,7 @@ func getMongoConnection() (*mongo.Database, error) {
 	pp.Println("mongo: connected to mongdb %s", HOSTS)
 
 	// seed data
-	seedData(connection)
+	// seedData(connection)
 	// seed data
 	return connection, nil
 }

@@ -1,11 +1,181 @@
 [
   {
     "method": "CONNECT",
+    "path": "ayaya",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "TRACE",
+    "path": "ayaya",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "OPTIONS",
+    "path": "ayaya/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "TRACE",
+    "path": "ayaya/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "CONNECT",
+    "path": "api/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "PATCH",
+    "path": "api/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "HEAD",
+    "path": "ayaya/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "PATCH",
+    "path": "ayaya/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "CONNECT",
+    "path": "api",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "DELETE",
+    "path": "api",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "PROPFIND",
+    "path": "api",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "PUT",
+    "path": "api",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "TRACE",
+    "path": "api",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "DELETE",
+    "path": "api/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "HEAD",
+    "path": "api/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "PROPFIND",
+    "path": "api/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "GET",
+    "path": "api/worklogs",
+    "name": "github.com/laminh711/reporter/worklog/delivery/http.(*WorklogHandler).FetchWorklog-fm"
+  },
+  {
+    "method": "GET",
+    "path": "ayaya",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "HEAD",
+    "path": "ayaya",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "DELETE",
+    "path": "ayaya/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "PUT",
+    "path": "api/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "PROPFIND",
+    "path": "ayaya/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "PUT",
+    "path": "ayaya/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "OPTIONS",
+    "path": "api",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "GET",
     "path": "api/*",
     "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
   },
   {
     "method": "POST",
+    "path": "api/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "OPTIONS",
+    "path": "ayaya",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "CONNECT",
+    "path": "ayaya/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "GET",
+    "path": "ayaya/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "POST",
+    "path": "ayaya/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "HEAD",
+    "path": "api",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "PATCH",
+    "path": "ayaya",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "PUT",
+    "path": "ayaya",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "POST",
+    "path": "api",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "OPTIONS",
+    "path": "api/*",
+    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
+  },
+  {
+    "method": "TRACE",
     "path": "api/*",
     "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
   },
@@ -15,198 +185,33 @@
     "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
   },
   {
-    "method": "PUT",
-    "path": "ayaya",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "PATCH",
-    "path": "ayaya/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "PUT",
-    "path": "ayaya/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "POST",
+    "method": "GET",
     "path": "api",
     "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
   },
   {
-    "method": "PUT",
-    "path": "api/*",
+    "method": "PATCH",
+    "path": "api",
     "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
   },
   {
-    "method": "CONNECT",
+    "method": "POST",
+    "path": "api/worklogs",
+    "name": "github.com/laminh711/reporter/worklog/delivery/http.(*WorklogHandler).CreateWorklog-fm"
+  },
+  {
+    "method": "DELETE",
     "path": "ayaya",
     "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
   },
   {
-    "method": "HEAD",
-    "path": "ayaya/*",
+    "method": "POST",
+    "path": "ayaya",
     "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
   },
   {
     "method": "GET",
     "path": "ayaya/worktimes",
     "name": "github.com/laminh711/reporter/worktime/delivery/http.(*WorktimeHandler).FetchWorktime-fm"
-  },
-  {
-    "method": "PROPFIND",
-    "path": "api/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "TRACE",
-    "path": "api/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "GET",
-    "path": "api/worktimes",
-    "name": "main.getWorktimes"
-  },
-  {
-    "method": "GET",
-    "path": "ayaya",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "TRACE",
-    "path": "ayaya",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "HEAD",
-    "path": "api/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "HEAD",
-    "path": "ayaya",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "DELETE",
-    "path": "ayaya/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "POST",
-    "path": "ayaya/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "PATCH",
-    "path": "api",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "DELETE",
-    "path": "ayaya",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "POST",
-    "path": "ayaya",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "CONNECT",
-    "path": "ayaya/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "GET",
-    "path": "ayaya/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "TRACE",
-    "path": "ayaya/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "GET",
-    "path": "api",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "PROPFIND",
-    "path": "api",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "TRACE",
-    "path": "api",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "DELETE",
-    "path": "api/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "OPTIONS",
-    "path": "ayaya",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "OPTIONS",
-    "path": "ayaya/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "CONNECT",
-    "path": "api",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "DELETE",
-    "path": "api",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "OPTIONS",
-    "path": "api",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "PUT",
-    "path": "api",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "OPTIONS",
-    "path": "api/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "PATCH",
-    "path": "ayaya",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "PROPFIND",
-    "path": "ayaya/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "HEAD",
-    "path": "api",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "GET",
-    "path": "api/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
-  },
-  {
-    "method": "PATCH",
-    "path": "api/*",
-    "name": "github.com/laminh711/reporter/vendor/github.com/labstack/echo.(*Group).Use.func1"
   }
 ]

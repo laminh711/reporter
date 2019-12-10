@@ -2,9 +2,7 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
@@ -13,8 +11,12 @@ import (
 	"github.com/k0kubun/pp"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/spf13/viper"
 
 	"github.com/laminh711/reporter/models"
+	_wlh "github.com/laminh711/reporter/worklog/delivery/http"
+	_wlr "github.com/laminh711/reporter/worklog/repository"
+	_wlu "github.com/laminh711/reporter/worklog/usecase"
 	_wh "github.com/laminh711/reporter/worktime/delivery/http"
 	_wr "github.com/laminh711/reporter/worktime/repository"
 	_wu "github.com/laminh711/reporter/worktime/usecase"
@@ -23,27 +25,24 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Log Log
-// type Log struct {
-// 	ID         *primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-// 	Name       string              `json:"name"`
-// 	Productive bool                `json:"productive"`
-// 	StartAt    time.Time           `json:"start_at"`
-// }
-
-// Worktime interval info
-// type Worktime struct {
-// 	ID       *primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-// 	LeftEnd  time.Time           `json:"left_end" bson:"left_end"`
-// 	RightEnd time.Time           `json:"right_end" bson:"right_end"`
-// }
-
-// type RequestBody struct {
-// 	Name    string `json:"name"`
-// 	StartAt string `json:"start_at"`
-// }
-
 var db *mongo.Database
+
+func init() {
+	viper.SetConfigFile(`config.json`)
+	if err := viper.ReadInConfig(); err != nil {
+		panic(err)
+		// TODO
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+
+		} else {
+
+		}
+	}
+
+	if viper.GetBool(`debug`) {
+		fmt.Println("Running on DEBUG mode")
+	}
+}
 
 func main() {
 	var err error
@@ -66,24 +65,14 @@ func main() {
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
-	// routes
-	api := e.Group("api")
-	// api.GET("/logs", showlog)
-	// api.POST("/logs", writelog)
-
-	api.GET("/worktimes", getWorktimes)
-
 	worktimeRepository := _wr.NewMongoWorktimeRepository(db, "worktimes")
+	// TODO find out what this timeout use
 	worktimeUsecase := _wu.NewWorktimeUsecase(worktimeRepository, 30)
 	_wh.NewWorktimeHandler(e, worktimeUsecase)
 
-	// test code
-	data, err := json.MarshalIndent(e.Routes(), "", "  ")
-	if err != nil {
-		fmt.Println("whatever")
-	}
-	ioutil.WriteFile("routes.json", data, 0644)
-	// test code
+	worklogRepository := _wlr.NewWorklogRepository(db, "worklogs")
+	worklogUsecase := _wlu.NewWorklogUsecase(worklogRepository)
+	_wlh.NewWorklogHandler(e, worklogUsecase)
 
 	// start server
 	e.Logger.Fatal(e.Start(":8754"))
@@ -94,9 +83,9 @@ func main() {
 }
 
 func addLog(collection *mongo.Collection) {
-	newOne := models.Log{
-		Name:    "",
-		StartAt: time.Now(),
+	newOne := models.Worklog{
+		Name:       "",
+		FinishedAt: time.Now(),
 	}
 	irs, err := collection.InsertOne(context.Background(), newOne)
 	if err != nil {
@@ -110,57 +99,57 @@ func bod(t time.Time) time.Time {
 	return time.Date(year, month, day, 0, 0, 0, 0, t.Location())
 }
 
-func seedData(db *mongo.Database) {
+// func seedData(db *mongo.Database) {
 
-	logCollection := db.Collection("logs")
-	worktimeCollection := db.Collection("worktimes")
+// 	logCollection := db.Collection("logs")
+// 	worktimeCollection := db.Collection("worktimes")
 
-	err := db.Drop(context.Background())
-	if err != nil {
-		log.Fatalf("drop db failed by error %v", err)
-	}
+// 	err := db.Drop(context.Background())
+// 	if err != nil {
+// 		log.Fatalf("drop db failed by error %v", err)
+// 	}
 
-	initData := []interface{}{}
-	first := models.Log{
-		Name:       "set mongo connection",
-		Productive: true,
-		StartAt:    time.Now().UTC().Add(time.Duration(-1) * time.Hour),
-	}
-	second := models.Log{
-		Name:       "seed data",
-		Productive: true,
-		StartAt:    time.Now().UTC().Add(time.Duration(+1) * time.Hour),
-	}
+// 	initData := []interface{}{}
+// 	first := models.Worklog{
+// 		Name:       "set mongo connection",
+// 		Productive: true,
+// 		StartAt:    time.Now().UTC().Add(time.Duration(-1) * time.Hour),
+// 	}
+// 	second := models.Worklog{
+// 		Name:       "seed data",
+// 		Productive: true,
+// 		StartAt:    time.Now().UTC().Add(time.Duration(+1) * time.Hour),
+// 	}
 
-	third := models.Log{
-		Name:       "test sort",
-		Productive: false,
-		StartAt:    time.Now().UTC().Add(time.Duration(0) * time.Hour),
-	}
+// 	third := models.Worklog{
+// 		Name:       "test sort",
+// 		Productive: false,
+// 		StartAt:    time.Now().UTC().Add(time.Duration(0) * time.Hour),
+// 	}
 
-	initData = append(initData, first)
-	initData = append(initData, second)
-	initData = append(initData, third)
+// 	initData = append(initData, first)
+// 	initData = append(initData, second)
+// 	initData = append(initData, third)
 
-	insertManyRs, err := logCollection.InsertMany(context.Background(), initData)
-	if err != nil {
-		log.Fatalf("Seed logs failed by error %v", err)
-	}
+// 	insertManyRs, err := logCollection.InsertMany(context.Background(), initData)
+// 	if err != nil {
+// 		log.Fatalf("Seed logs failed by error %v", err)
+// 	}
 
-	pp.Println("inserted these: \n", insertManyRs.InsertedIDs)
+// 	pp.Println("inserted these: \n", insertManyRs.InsertedIDs)
 
-	worktime := models.Worktime{
-		LeftEnd:  bod(time.Now().UTC()).Add(time.Hour * time.Duration(8)),
-		RightEnd: bod(time.Now().UTC()).Add(time.Hour * time.Duration(17)),
-	}
+// 	worktime := models.Worktime{
+// 		LeftEnd:  bod(time.Now().UTC()).Add(time.Hour * time.Duration(8)),
+// 		RightEnd: bod(time.Now().UTC()).Add(time.Hour * time.Duration(17)),
+// 	}
 
-	ion, err := worktimeCollection.InsertOne(context.Background(), worktime)
-	if err != nil {
-		log.Fatalf("Seed worktime failed by error %v", err)
-	}
-	pp.Println("inserted %v", ion.InsertedID)
+// 	ion, err := worktimeCollection.InsertOne(context.Background(), worktime)
+// 	if err != nil {
+// 		log.Fatalf("Seed worktime failed by error %v", err)
+// 	}
+// 	pp.Println("inserted %v", ion.InsertedID)
 
-}
+// }
 
 func getWorktimes(c echo.Context) error {
 	collection := db.Collection("worktimes")
@@ -200,8 +189,8 @@ func showlog(c echo.Context) error {
 		return err
 	}
 
-	result := []models.Log{}
-	var logRecord models.Log
+	result := []models.Worklog{}
+	var logRecord models.Worklog
 	for cursor.Next(context.Background()) {
 		err := cursor.Decode(&logRecord)
 		if err != nil {
@@ -218,11 +207,11 @@ func showlog(c echo.Context) error {
 }
 
 func writelog(c echo.Context) error {
-	rec := new(models.Log)
+	rec := new(models.Worklog)
 	if err := c.Bind(rec); err != nil {
 		return err
 	}
-	rec.StartAt = time.Now().UTC()
+	rec.FinishedAt = time.Now().UTC()
 
 	collection := db.Collection("logs")
 	insertRs, err := collection.InsertOne(context.Background(), rec)
@@ -237,30 +226,29 @@ func writelog(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-var (
-	HOSTS    = []string{"localhost:27017"}
-	DBNAME   = "devdb"
-	USERNAME = "who"
-	PASSWORD = "dat"
-)
-
 func getMongoConnection() (*mongo.Database, error) {
+	dbHost := viper.GetStringSlice("database.host")
+	dbName := viper.GetString("database.db")
+	dbUsername := viper.GetString("database.username")
+	dbPassword := viper.GetString("database.password")
+	ctxTimeout := viper.GetInt("context.timeout")
+	connectTimeout := time.Duration(ctxTimeout) * time.Second
+
 	config := &options.ClientOptions{
-		Hosts: HOSTS,
-		// ConnectTimeout: time.Duration(10 * time.Second),
+		Hosts:          dbHost,
+		ConnectTimeout: &connectTimeout,
 		Auth: &options.Credential{
-			Username: USERNAME,
-			Password: PASSWORD,
+			Username: dbUsername,
+			Password: dbPassword,
 		},
 	}
 
 	client, err := mongo.Connect(context.Background(), options.MergeClientOptions(config))
 	if err != nil {
-		pp.Println("mongo: could not connect to mongodb on %s", HOSTS)
+		pp.Printf("mongo: could not connect to mongodb on %s by err %v", dbHost[0], err)
 	}
-
-	connection := client.Database(DBNAME)
-	pp.Println("mongo: connected to mongdb %s", HOSTS)
+	connection := client.Database(dbName)
+	pp.Printf("mongo: connected to mongdb %s", dbHost[0])
 
 	// seed data
 	// seedData(connection)

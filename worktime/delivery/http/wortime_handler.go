@@ -27,7 +27,6 @@ func NewWorktimeHandler(e *echo.Echo, u worktime.Usecase) {
 }
 
 func (handler *WorktimeHandler) FetchWorktime(ec echo.Context) error {
-
 	ctx := ec.Request().Context()
 	result, err := handler.WorktimeUsecase.Fetch(ctx)
 

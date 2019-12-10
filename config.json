@@ -1,0 +1,15 @@
+{
+    "debug": true,
+    "server": {
+        "address": ":8754"
+    },
+    "context": {
+        "timeout": 2
+    },
+    "database": {
+        "host": ["localhost:27017"],
+        "db": "devdb",
+        "username": "who",
+        "password": "dat"
+    }
+}

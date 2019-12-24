@@ -32,11 +32,11 @@ func init() {
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)
 		// TODO
-		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+		// if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 
-		} else {
+		// } else {
 
-		}
+		// }
 	}
 
 	if viper.GetBool(`debug`) {
@@ -73,6 +73,30 @@ func main() {
 	worklogRepository := _wlr.NewWorklogRepository(db, "worklogs")
 	worklogUsecase := _wlu.NewWorklogUsecase(worklogRepository)
 	_wlh.NewWorklogHandler(e, worklogUsecase)
+
+	// modify later
+	e.POST("api/auth", func(ec echo.Context) error {
+		type LoginRequest struct {
+			Username string
+			Password string
+		}
+		type LoginSuccess struct {
+			Message string `json:"message"`
+		}
+		type LoginFailed struct {
+			Message string `json:"message"`
+		}
+		request := new(LoginRequest)
+		if err := ec.Bind(request); err != nil {
+			return ec.JSON(http.StatusBadRequest, LoginFailed{err.Error()})
+		}
+
+		if request.Username == "admin" && request.Password == "admin" {
+			return ec.JSON(http.StatusOK, LoginSuccess{"ok"})
+		}
+
+		return ec.JSON(http.StatusOK, LoginFailed{"Wrong credentials"})
+	})
 
 	// start server
 	e.Logger.Fatal(e.Start(":8754"))

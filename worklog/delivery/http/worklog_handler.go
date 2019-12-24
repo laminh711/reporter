@@ -5,6 +5,9 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
+	basicAuth "github.com/laminh711/reporter/auth"
+
+	"github.com/labstack/echo/middleware"
 	"github.com/laminh711/reporter/models"
 	"github.com/laminh711/reporter/worklog"
 )
@@ -32,6 +35,8 @@ func NewWorklogHandler(e *echo.Echo, wu worklog.Usecase) {
 	}
 
 	route := e.Group("api")
+	route.Use(middleware.BasicAuth(basicAuth.Middleware))
+
 	route.GET("/worklogs", handler.FetchWorklog)
 	route.POST("/worklogs", handler.CreateWorklog)
 }

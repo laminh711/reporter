@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/jasonlvhit/gocron"
 	"github.com/k0kubun/pp"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -23,6 +22,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 var db *mongo.Database
@@ -74,6 +75,17 @@ func main() {
 	worklogUsecase := _wlu.NewWorklogUsecase(worklogRepository)
 	_wlh.NewWorklogHandler(e, worklogUsecase)
 
+	//
+	_ = db.Collection("users").Drop(context.Background())
+	password, _ := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.DefaultCost)
+	adminUser := models.User{
+		Username: "admin",
+		Password: string(password),
+	}
+	_, err = db.Collection("Users").InsertOne(context.Background(), adminUser)
+	if err != nil {
+		pp.Printf("insert admin error by %v", err)
+	}
 	// modify later
 	e.POST("api/auth", func(ec echo.Context) error {
 		type LoginRequest struct {
@@ -91,6 +103,10 @@ func main() {
 			return ec.JSON(http.StatusBadRequest, LoginFailed{err.Error()})
 		}
 
+		// db
+
+		// if bcrypt.CompareHashAndPassword()
+
 		if request.Username == "admin" && request.Password == "admin" {
 			return ec.JSON(http.StatusOK, LoginSuccess{"ok"})
 		}
@@ -101,9 +117,9 @@ func main() {
 	// start server
 	e.Logger.Fatal(e.Start(":8754"))
 
-	gocron.Every(5).Seconds().Do(addLog, db.Collection("logs"))
+	// gocron.Every(5).Seconds().Do(addLog, db.Collection("logs"))
 	// function Start start all the pending jobs
-	<-gocron.Start()
+	// <-gocron.Start()
 }
 
 func addLog(collection *mongo.Collection) {

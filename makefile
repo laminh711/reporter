@@ -1,5 +1,11 @@
 .PHONY: davai comin bd
 
+build-migrator:
+	go build -o bin/migrator cmd/migrator/*
+
+migrator: build-migrator
+	bin/migrator $(dir) $(lv)
+
 davai:
 	go run main.go
 
